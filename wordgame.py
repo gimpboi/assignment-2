@@ -102,30 +102,5 @@ def is_valid_word(word, hand, word_list):
     else:
         return False
 
-def is_valid_word(word, hand, word_list):
-    if word in word_list:
-        counter = 0
-        for i in word:
-            if i in hand and hand[i] > 0:
-                counter += 1
-                hand[i] = hand.get(i, 0) - 1
-        if len(word) == counter:
-            return True
-        else:
-            return False
-
-    else:
-        return False
-
-
-# In[19]:
-
-
-is_valid_word("aim", {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}, wordlist)
-
-
-# In[ ]:
-
-
 
 
