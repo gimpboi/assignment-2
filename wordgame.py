@@ -44,6 +44,12 @@ def get_word_score(word,n):
     sum2 = max((7*length-3*(n-length)))
     return sum1 * sum2
 
+def get_frequency_dict(sequence):
+    freq = {}
+    for x in sequence:
+        freq[x] = freq.get(x,0) + 1
+    return freq
+
 
 # In[3]:
 
