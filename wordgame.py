@@ -148,17 +148,22 @@ assert(hand2 == {'l':1, 'm':1} or hand2 == {'a':0, 'q':0, 'l':1, 'm':1, 'u':0, '
 # In[14]:
 
 
+
 def is_valid_word(word, hand, word_list):
     if word in word_list:
-        chars = list(word)
-        vals = list(hand.values())
-        print(vals)
-        for i in chars:
-            if i in vals:
-                vals.remove(i)
-            else:
-                return False
-        return True
+        counter = 0
+        for i in word:
+            if (i in hand) and (hand[i] > 0):
+                hand[i] = hand.get(i, 0) - 1
+                counter += 1
+            elif (i in VOWELS and "*" in hand) and (hand['*'] > 0):
+                hand['*'] = hand.get('*', 0) - 1
+                counter += 1
+        if len(word) == counter:
+            return True
+
+        else:
+            return False
     else:
         return False
 
