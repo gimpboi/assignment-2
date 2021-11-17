@@ -34,6 +34,16 @@ def load_words():
 
 load_words()
 
+def get_word_score(word,n):
+    """Assumes the word is correct and calculates the score, will need to handle strings with mixed cases"""
+    sum1 = 0
+    word_low = word.lower()
+    length = len(word_low)
+    for i in word_low:
+        sum1 += SCRABBLE_LETTER_VALUES[i]
+    sum2 = max((7*length-3*(n-length)))
+    return sum1 * sum2
+
 
 # In[3]:
 
