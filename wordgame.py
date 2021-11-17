@@ -41,7 +41,7 @@ def get_word_score(word,n):
     length = len(word_low)
     for i in word_low:
         sum1 += SCRABBLE_LETTER_VALUES[i]
-    sum2 = max((7*length-3*(n-length)))
+    sum2 = max(1,(7*length-3*(n-length)))
     return sum1 * sum2
 
 def get_frequency_dict(sequence):
@@ -102,5 +102,22 @@ def is_valid_word(word, hand, word_list):
     else:
         return False
 
-
+def play_hand(hand, wordlist):
+    score = 0
+    letter_total = sum(hand.values())
+    while letter_total > 0:
+        display_hand(hand)
+        word_input = input("Would you like to quit? If so, input two !!, otherwise enter word: ")
+        if word_input == "!!":
+            print("Game over, man. Total score:", score)
+            break
+        else:
+            if is_valid_word(word_input, hand, wordlist) == True:
+                hand = update_hand(hand, word_input)
+                score += get_word_score(word_input, letter_total)
+                print("Points earned:", score)
+            else:
+                print("Word is not valid, try again.")
+    else:
+        print("Game over. Total score:", score)
 
