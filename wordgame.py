@@ -60,17 +60,6 @@ def display_hand(hand):
             print(letter, end=' ') # print all on the same line
     print() 
 
-
-# In[4]:
-
-
-display_hand({'a':1, 'x':2})
-
-
-# In[5]:
-
-
-import math
 def deal_hand(n):
     hand={}
     num_vowels = int(math.ceil(n / 3))
@@ -81,15 +70,6 @@ def deal_hand(n):
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
     return hand
-
-
-# In[6]:
-
-
-deal_hand(20)
-
-
-# In[7]:
 
 
 def update_hand(hand, word):
@@ -103,51 +83,6 @@ def update_hand(hand, word):
         else:
             continue
     return hand_new
-
-
-# In[8]:
-
-
-update_hand({'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}, 'hungarian')
-
-
-# In[9]:
-
-
-word = "word"
-
-for i in word:
-    print(i)
-
-
-# In[10]:
-
-
-hand = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}
-if 1 in hand:
-    print(1)
-
-
-# In[11]:
-
-
-handOrig = {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}
-handCopy = handOrig.copy()
-word = 'quail'
-hand2 = update_hand(handCopy, word)
-assert(hand2 == {'l':1, 'm':1} or hand2 == {'a':0, 'q':0, 'l':1, 'm':1, 'u':0, 'i':0})
-       
-
-
-# In[ ]:
-
-
-
-
-
-# In[14]:
-
-
 
 def is_valid_word(word, hand, word_list):
     if word in word_list:
@@ -166,23 +101,6 @@ def is_valid_word(word, hand, word_list):
             return False
     else:
         return False
-
-
-# In[15]:
-
-
-inFile = open(WORDLIST_FILENAME, 'r')
-    # wordlist: list of strings
-wordlist = []
-for line in inFile:
-    wordlist.append(line.strip().lower())
-
-
-is_valid_word("quail", {'a':1, 'q':1, 'l':2, 'm':1, 'u':1, 'i':1}, wordlist)
-
-
-# In[16]:
-
 
 def is_valid_word(word, hand, word_list):
     if word in word_list:
