@@ -34,15 +34,9 @@ def load_words():
 
 load_words()
 
-def get_word_score(word,n):
-    """Assumes the word is correct and calculates the score, will need to handle strings with mixed cases"""
-    sum1 = 0
-    word_low = word.lower()
-    length = len(word_low)
-    for i in word_low:
-        sum1 += SCRABBLE_LETTER_VALUES[i]
-    sum2 = max(1,(7*length-3*(n-length)))
-    return sum1 * sum2
+
+# In[ ]:
+
 
 def get_frequency_dict(sequence):
     freq = {}
@@ -51,7 +45,7 @@ def get_frequency_dict(sequence):
     return freq
 
 
-# In[3]:
+# In[ ]:
 
 
 def display_hand(hand):
@@ -59,6 +53,10 @@ def display_hand(hand):
         for j in range(hand[letter]):
             print(letter, end=' ') # print all on the same line
     print() 
+
+
+# In[ ]:
+
 
 def deal_hand(n):
     hand={}
@@ -72,6 +70,9 @@ def deal_hand(n):
     return hand
 
 
+# In[ ]:
+
+
 def update_hand(hand, word):
     hand_new = hand
     for key in word:
@@ -79,45 +80,178 @@ def update_hand(hand, word):
             if hand_new.get(key) > 0:
                 hand_new[key] =  hand_new[key] - 1
             else:
-                hand_new[key] = 0
+                pass
         else:
             continue
     return hand_new
 
+
+# In[ ]:
+
+
 def is_valid_word(word, hand, word_list):
+    new_hand = hand.copy()
     if word in word_list:
         counter = 0
         for i in word:
-            if (i in hand) and (hand[i] > 0):
-                hand[i] = hand.get(i, 0) - 1
+            if i in new_hand and new_hand[i] > 0:
                 counter += 1
-            elif (i in VOWELS and "*" in hand) and (hand['*'] > 0):
-                hand['*'] = hand.get('*', 0) - 1
-                counter += 1
+                new_hand[i] = new_hand.get(i, 0) - 1
         if len(word) == counter:
             return True
-
         else:
             return False
     else:
         return False
 
+
+# In[ ]:
+
+
+def get_word_score(word,n):
+    """Assumes the word is correct and calculates the score, will need to handle strings with mixed cases"""
+    sum1 = 0
+    word_low = word.lower()
+    length = len(word_low)
+    for i in word_low:
+        sum1 += SCRABBLE_LETTER_VALUES[i]
+    sum2 = max(1,(7*length-3*(n-length)))
+    return sum1 * sum2
+
+
+# In[ ]:
+
+
+def calculate_handlen(hand):
+    hand_length = sum(hand.values())
+    return hand_length
+
+
+# In[ ]:
+
+
 def play_hand(hand, wordlist):
     score = 0
-    letter_total = sum(hand.values())
-    while letter_total > 0:
-        display_hand(hand)
-        word_input = input("Would you like to quit? If so, input two !!, otherwise enter word: ")
+    new_hand = hand.copy()
+    while calculate_handlen(new_hand) > 0:
+        display_hand(new_hand)
+        word_input = input("Please enter word. If you would like to quit, enter !!: ")
         if word_input == "!!":
-            print("Game over, man. Total score:", score)
+            print("Game over, man. Hand score:", score)
             break
         else:
-            if is_valid_word(word_input, hand, wordlist) == True:
-                hand = update_hand(hand, word_input)
-                score += get_word_score(word_input, letter_total)
+            if is_valid_word(word_input, new_hand, wordlist) == True:
+                update_hand(new_hand, word_input)
+                score += get_word_score(word_input, calculate_handlen(new_hand))
                 print("Points earned:", score)
             else:
+                new_hand = update_hand(new_hand, word_input)
                 print("Word is not valid, try again.")
     else:
-        print("Game over. Total score:", score)
+        print("Game over, man. Hand score:", score)
+    return score
+
+
+# In[ ]:
+
+
+def substitute_hand(hand, letter):
+    import random
+    tot_letters = VOWELS + CONSONANTS
+    rand_letter = random.choice(tot_letters)
+    while rand_letter in hand:
+        rand_letter = random.choice(tot_letters) 
+    else:
+        if letter in hand:
+            hand[rand_letter] = hand.pop(letter)
+        else:
+            pass
+    return(hand)
+
+
+# In[ ]:
+
+
+def play_game(word_list):
+    score = 0
+    total_score = 0
+    sub_count = 1
+    replay_count = 1
+    input_hands_count = eval(input("Please enter how many hands you would like to play as an integer: "))
+    hand_length = eval(input("Please enter how many letters you would like in a hand as an integer: "))
+    while input_hands_count > 0:
+        hand = deal_hand(hand_length)
+        dummy_hand = hand.copy()
+        display_hand(dummy_hand)
+        if sub_count == 1 and replay_count == 1:
+            input_sub = input("Would you like to substitute a letter in the current hand? This can only be done once per game. If so, input 'y'/'n': ")
+            if input_sub == 'y':
+                display_hand(dummy_hand)
+                sub_pref = input("Please choose letter in hand to be replaced: ")
+                sub_hand = substitute_hand(dummy_hand, sub_pref)
+                dummy_sub_hand = sub_hand.copy()
+                sub_count = sub_count - 1
+                hand_value = play_hand(dummy_sub_hand, wordlist)
+                replay_input = input("Would you like to replay this hand? Enter either y/n: ")
+                if replay_input == 'y':
+                    score += max(hand_value, play_hand(sub_hand, wordlist))
+                    total_score += score
+                    replay_count -= 1
+                    print("Total score:", score)
+                elif replay_input == 'n':
+                    score += hand_value
+                    total_score += score
+                    print("Total score:", score)
+            elif input_sub == 'n':
+                hand_value = play_hand(dummy_hand, wordlist)
+                replay_input = input("Would you like to replay this hand? Enter either y/n: ")
+                if replay_input == 'y':
+                    score += max(hand_value, play_hand(hand, wordlist))
+                    total_score += score
+                    replay_count -= 1
+                    print("Total score:", score)
+                elif replay_input == 'n':
+                    score += hand_value
+                    total_score += score
+                    print("Total score:", score)
+                else:
+                    print('short')
+        elif sub_count == 0 and replay_count == 1:
+            print("All substitutions have been used up this game.")
+            hand_value = play_hand(dummy_hand, wordlist)
+            replay_input = input("Would you like to replay this hand? Enter either y/n: ")
+            if replay_input == 'y':
+                score += max(hand_value, play_hand(hand, wordlist))
+                total_score += score
+                replay_count -= 1
+                print("Total score:", score)
+            elif replay_input == 'n':
+                score += hand_value
+                total_score += score
+                print("Total score:", score)
+            else:
+                print('short')
+        elif sub_count == 1 and replay_count == 0:
+            print("All replays have been used up this game")
+            input_sub = input("Would you like to substitute a letter in the current hand? This can only be done once per game. If so, input 'y'/'n': ")
+            if input_sub == 'y':
+                display_hand(dummy_hand)
+                sub_pref = input("Please choose letter in hand to be replaced: ")
+                substitute_hand(dummy_hand, sub_pref)
+                sub_count = sub_count - 1
+                hand_value = play_hand(dummy_hand, wordlist)
+                score += hand_value
+                total_score += score
+                print("Total score:", score)
+            else:
+                print('nah')
+        elif sub_count == 0 and replay_count == 0:
+            print("All substitutions and replays have been used up this game.")
+            hand_value = play_hand(dummy_hand, wordlist)
+            score += hand_value
+            total_score += score
+            print("Total score:", score)
+        input_hands_count = input_hands_count - 1
+    else:
+        print("Series complete! Total score: ", score)
 
