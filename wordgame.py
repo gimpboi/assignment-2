@@ -243,8 +243,11 @@ def play_game(word_list):
                 score += hand_value
                 total_score += score
                 print("Total score:", score)
-            else:
-                print('nah')
+            elif input_sub == 'n':
+                hand_value = play_hand(dummy_hand, wordlist)
+                score += hand_value
+                total_score += score
+                print("Total score:", score)
         elif sub_count == 0 and replay_count == 0:
             print("All substitutions and replays have been used up this game.")
             hand_value = play_hand(dummy_hand, wordlist)
