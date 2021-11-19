@@ -213,9 +213,7 @@ def play_game(word_list):
                 elif replay_input == 'n':
                     score += hand_value
                     total_score += score
-                    print("Total score:", score)
-                else:
-                    print('short')
+                    print("Total score:", score)                
         elif sub_count == 0 and replay_count == 1:
             print("All substitutions have been used up this game.")
             hand_value = play_hand(dummy_hand, wordlist)
@@ -229,8 +227,6 @@ def play_game(word_list):
                 score += hand_value
                 total_score += score
                 print("Total score:", score)
-            else:
-                print('short')
         elif sub_count == 1 and replay_count == 0:
             print("All replays have been used up this game")
             input_sub = input("Would you like to substitute a letter in the current hand? This can only be done once per game. If so, input 'y'/'n': ")
