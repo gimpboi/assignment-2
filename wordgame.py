@@ -119,7 +119,10 @@ def get_word_score(word,n):
     word_low = word.lower()
     length = len(word_low)
     for i in word_low:
-        sum1 += SCRABBLE_LETTER_VALUES[i]
+        if (i != '*'):
+            sum1 += SCRABBLE_LETTER_VALUES[i]
+        else:
+            sum1 = 0
     sum2 = max(1,(7*length-3*(n-length)))
     return sum1 * sum2
 
