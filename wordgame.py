@@ -91,23 +91,37 @@ def update_hand(hand, word):
 
 
 def is_valid_word(word, hand, word_list):
-    if word in word_list:
-        counter = 0
-        handCopy = hand.copy()
-        for i in word:
-            if (i in handCopy) and (handCopy[i] > 0):
-                handCopy[i] = handCopy.get(i, 0) - 1
-                counter += 1
-            elif (i in VOWELS and "*" in handCopy) and (handCopy['*'] > 0):
-                handCopy['*'] = handCopy.get('*', 0) - 1
-                counter += 1
-        if len(word) == counter and word in word_list:
-            return True
+    wildcard_values = ['a', 'e', 'i', 'o', 'u']
+    wildcard_attempts = []
+    if '*' in hand:
+        for i in wildcard_values:
+            letter_replace = word.replace('*', i)
+            wildcard_attempts.append(letter_replace)
+        for i in wildcard_attempts:
+            if i in word_list:
+                word = i
+                return True
+            else:
+                pass
+        
+    else:
+        if word in word_list:
+            counter = 0
+            handCopy = hand.copy()
+            for i in word:
+                if (i in handCopy) and (handCopy[i] > 0):
+                    handCopy[i] = handCopy.get(i, 0) - 1
+                    counter += 1
+                elif (i in VOWELS and "*" in handCopy) and (handCopy['*'] > 0):
+                    handCopy['*'] = handCopy.get('*', 0) - 1
+                    counter += 1
+            if len(word) == counter and word in word_list:
+                return True
 
+            else:
+                return False
         else:
             return False
-    else:
-        return False
 
 
 # In[ ]:
