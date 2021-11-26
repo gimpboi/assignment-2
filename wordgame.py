@@ -93,14 +93,15 @@ def update_hand(hand, word):
 def is_valid_word(word, hand, word_list):
     if word in word_list:
         counter = 0
+        handCopy = hand.copy()
         for i in word:
-            if (i in hand) and (hand[i] > 0):
-                hand[i] = hand.get(i, 0) - 1
+            if (i in handCopy) and (handCopy[i] > 0):
+                handCopy[i] = handCopy.get(i, 0) - 1
                 counter += 1
-            elif (i in VOWELS and "*" in hand) and (hand['*'] > 0):
-                hand['*'] = hand.get('*', 0) - 1
+            elif (i in VOWELS and "*" in handCopy) and (handCopy['*'] > 0):
+                handCopy['*'] = handCopy.get('*', 0) - 1
                 counter += 1
-        if len(word) == counter:
+        if len(word) == counter and word in word_list:
             return True
 
         else:
