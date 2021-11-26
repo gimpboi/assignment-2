@@ -136,7 +136,7 @@ def get_word_score(word,n):
         if (i != '*'):
             sum1 += SCRABBLE_LETTER_VALUES[i]
         else:
-            sum1 = 0
+            sum1 += 0
     sum2 = max(1,(7*length-3*(n-length)))
     return sum1 * sum2
 
